@@ -1,0 +1,144 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Live input record and playback</title>
+    <style type='text/css'>
+        ul
+        {
+            list-style: none;
+        }
+        
+        #recordingslist audio
+        {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script src="/Scripts/jquery-ui-1.8.11.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/Scripts/greedySpeech/recorder.js"></script>
+    <script type="text/javascript">
+        //输出
+        function _log(e, data) {
+            log.innerHTML += "\n" + e + " " + (data || '');
+        }
+
+        var audio_context;
+        var recorder;
+
+
+        function startUserMedia(stream) {
+            var input = audio_context.createMediaStreamSource(stream);
+            _log('Media stream created.');
+            //音源输出到默认输出设备（回音现象）
+            //input.connect(audio_context.destination);
+            //            _log('Input connected to audio context destination.');
+
+            recorder = new Recorder(input);
+            _log('Recorder initialised.');
+        }
+
+        function startRecording(button) {
+            recorder && recorder.record();
+            button.disabled = true;
+            button.nextElementSibling.disabled = false;
+            _log('Recording...');
+        }
+
+        function stopRecording(button) {
+            recorder && recorder.stop();
+            button.disabled = true;
+            button.previousElementSibling.disabled = false;
+            _log('Stopped recording.');
+            //本地播放
+            createDownloadLink();
+            recorder.clear();
+        }
+
+        function createDownloadLink() {
+            recorder && recorder.exportWAV(function (blob) {
+                //var url = URL.createObjectURL(blob);
+                //var li = document.createElement('li');
+                //var au = document.createElement('audio');
+                //var hf = document.createElement('a');
+
+                //au.controls = true;
+                //au.src = url;
+                //hf.href = url;
+                //hf.download = new Date().toISOString() + '.wav';
+                //hf.innerHTML = hf.download;
+                //li.appendChild(au);
+                //li.appendChild(hf);
+                //recordingslist.appendChild(li);
+                //上传音频文件
+                //var file2 = new FileReader();
+                //file2.onloadend = function (e) {
+                //    $.ajax({
+                //        url: "/Home/Recode",
+                //        type: "POST",
+                //        data: file2.result,
+                //        processData: false,
+                //        contentType: "text/plain"
+                //    });
+                //};
+                //file2.readAsDataURL(blob);
+                //var url = (window.URL || window.webkitURL).createObjectURL(blob);
+                //var xhr = new XMLHttpRequest();
+                //xhr.open('POST', '/Home/Recode', true);
+                //xhr.onload = function (e) {
+                //    var result = e.target.result;
+                //};
+                //xhr.send(url);//url is Blob
+                var formData = new FormData();
+                formData.append('file', blob);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/Home/Record', true);
+                xhr.onload = function (e) { };
+
+                xhr.send(formData);
+            });
+        }
+
+        window.onload = function init() {
+            try {
+                // webkit shim
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+                window.URL = window.URL || window.webkitURL;
+
+                audio_context = new AudioContext;
+                _log('Audio context set up.');
+                _log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+            } catch (e) {
+                alert('No web audio support in this browser!');
+            }
+
+            navigator.getUserMedia({ audio: true }, startUserMedia, function (e) {
+                _log('No live audio input: ' + e);
+            });
+        };
+    </script>
+</head>
+<body>
+    <h1>
+        Recorder.js simple WAV export example</h1>
+    <p>
+        Make sure you are using a recent version of Google Chrome, at the moment this only
+        works with Google Chrome Canary.</p>
+    <p>
+        Also before you enable microphone input either plug in headphones or turn the volume
+        down if you want to avoid ear splitting feedback!</p>
+    <button onclick="startRecording(this);">
+        record</button>
+    <button onclick="stopRecording(this);" disabled="disabled">
+        stop</button>
+    <h2>
+        Recordings</h2>
+    <ul id="recordingslist">
+    </ul>
+    <h2>
+        Log</h2>
+    <pre id="log"></pre>
+</body>
+</html>

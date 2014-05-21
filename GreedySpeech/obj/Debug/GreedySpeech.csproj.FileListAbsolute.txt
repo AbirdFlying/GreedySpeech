@@ -1,0 +1,8 @@
+C:\Users\AbirdPc\Desktop\Ing\GreedySpeech\GreedySpeech\bin\GreedySpeech.dll
+C:\Users\AbirdPc\Desktop\Ing\GreedySpeech\GreedySpeech\bin\GreedySpeech.pdb
+C:\Users\AbirdPc\Desktop\Ing\GreedySpeech\GreedySpeech\bin\EntityFramework.dll
+C:\Users\AbirdPc\Desktop\Ing\GreedySpeech\GreedySpeech\bin\EntityFramework.xml
+C:\Users\AbirdPc\Desktop\Ing\GreedySpeech\GreedySpeech\obj\Debug\GreedySpeech.csprojResolveAssemblyReference.cache
+C:\Users\AbirdPc\Desktop\Ing\GreedySpeech\GreedySpeech\obj\Debug\GreedySpeech.dll
+C:\Users\AbirdPc\Desktop\Ing\GreedySpeech\GreedySpeech\obj\Debug\GreedySpeech.pdb
+C:\Users\AbirdPc\Desktop\Ing\GreedySpeech\GreedySpeech\bin\NAudio.dll
